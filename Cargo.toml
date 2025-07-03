@@ -1,0 +1,16 @@
+[package]
+name = "DeepSheet"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.46.0", features = ["macros", "rt-multi-thread"] }
+poise = "0.6.1"
+shuttle-runtime = "0.56.0"
+shuttle-serenity = "0.56.0"
+anyhow = "1.0.98"
+
+[dependencies.serenity]
+default-features = false
+features = ["full"]
+version = "0.12"
