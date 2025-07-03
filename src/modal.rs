@@ -16,7 +16,7 @@ struct MyModal {
 }
 #[poise::command(slash_command)]
 pub async fn announce(ctx: ApplicationContext<'_>) -> Result<(), Error> {
-    let data = MyModal::execute(ctx).await?;
+    let data = MyModal::execute(ctx).await?.unwrap();
     println!("Got data: {:?}", data);
 
     Ok(())
