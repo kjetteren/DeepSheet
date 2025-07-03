@@ -5,8 +5,13 @@ use poise::serenity_prelude as serenity;
 #[allow(dead_code)]
 #[name = "Create an Announcement"]
 struct MyModal {
-    first_input: String,
-    second_input: Option<String>,
+    #[name = "Movie Title"]
+    #[placeholder = "Enter the title of the movie"]
+    title: String,
+    #[placeholder = "MM/DD"]
+    date: String,
+    #[placeholder = "HH:MM"]
+    time: String,
 }
 #[poise::command(slash_command)]
 pub async fn modal(ctx: poise::ApplicationContext<'_, Data, Error>) -> Result<(), Error> {
