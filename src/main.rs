@@ -20,8 +20,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             commands: vec![
-                modal::modal(),
-                modal::component_modal(),
+                modal::announce(),
             ],
             on_error: |error| {
                 Box::pin(async move {
