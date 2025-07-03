@@ -1,8 +1,6 @@
 mod modal;
 mod setup;
 
-use std::env;
-
 use anyhow::Context as _;
 use poise::serenity_prelude::{ClientBuilder, GatewayIntents, RoleParseError};
 use shuttle_runtime::SecretStore;
