@@ -1,4 +1,5 @@
 mod modal;
+mod setup;
 
 use std::env;
 
