@@ -18,6 +18,12 @@ struct MyModal {
 pub async fn announce(ctx: ApplicationContext<'_>) -> Result<(), Error> {
     let data = MyModal::execute(ctx).await?.unwrap();
     println!("Got data: {:?}", data);
+    ctx.say(format!(
+        "Announcement created for **{}** on {} at {}",
+        data.title, data.date, data.time
+    ))
+        .await
+        .map_err(Error::from)?;
 
     Ok(())
 }
