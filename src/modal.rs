@@ -3,6 +3,7 @@ use poise::serenity_prelude as serenity;
 
 #[derive(Debug, poise::Modal)]
 #[allow(dead_code)]
+#[name = "Create an Announcement"]
 struct MyModal {
     first_input: String,
     second_input: Option<String>,
