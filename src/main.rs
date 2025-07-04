@@ -23,7 +23,6 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
             ],
             on_error: |error| {
                 Box::pin(async move {
-                    println!("what the hell");
                     match error {
                         poise::FrameworkError::ArgumentParse { error, .. } => {
                             if let Some(error) = error.downcast_ref::<RoleParseError>() {
