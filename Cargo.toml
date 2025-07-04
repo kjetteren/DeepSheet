@@ -9,6 +9,8 @@ poise = "0.6.1"
 shuttle-runtime = "0.56.0"
 shuttle-serenity = "0.56.0"
 anyhow = "1.0.98"
+chrono = "0.4.41"
+chrono-tz = "0.10.3"
 
 [dependencies.serenity]
 default-features = false
