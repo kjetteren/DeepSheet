@@ -1,9 +1,9 @@
+use crate::{Data, Error};
 use chrono::{NaiveDateTime, TimeZone};
 use chrono_tz::Europe::Brussels;
 use poise::Modal;
 use poise::serenity_prelude::{Timestamp, utils::MessageBuilder};
 use serenity::all::{CreateScheduledEvent, ScheduledEventType};
-use crate::{Data, Error};
 type ApplicationContext<'a> = poise::ApplicationContext<'a, Data, Error>;
 
 #[derive(Debug, Modal)]
@@ -24,9 +24,7 @@ pub async fn announce(ctx: ApplicationContext<'_>) -> Result<(), Error> {
 
     if let Some(guild_id) = ctx.guild_id() {
         if let Some(guild) = guild_id.to_guild_cached(&ctx) {
-            role_id = guild
-                .role_by_name("Kino Enjoyers")
-                .map(|role| role.id);
+            role_id = guild.role_by_name("Kino Enjoyers").map(|role| role.id);
         }
 
         let channel_id = guild_id
@@ -51,21 +49,17 @@ pub async fn announce(ctx: ApplicationContext<'_>) -> Result<(), Error> {
                     .push(":F>")
                     .build();
 
-                ctx.say(content)
-                    .await
-                    .map_err(Error::from)?;
+                ctx.say(content).await.map_err(Error::from)?;
 
                 if let Some(channel_id) = channel_id {
                     let event = CreateScheduledEvent::new(
                         ScheduledEventType::Voice,
                         &data.title,
-                        Timestamp::from_unix_timestamp(timestamp)
-                            .unwrap()
+                        Timestamp::from_unix_timestamp(timestamp).unwrap(),
                     )
-                        .channel_id(channel_id);
+                    .channel_id(channel_id);
 
-                    guild_id.create_scheduled_event(&ctx.http(), event)
-                        .await?;
+                    guild_id.create_scheduled_event(&ctx.http(), event).await?;
                 }
             }
         }
