@@ -1,7 +1,8 @@
 use chrono::{NaiveDateTime, TimeZone};
 use chrono_tz::Europe::Brussels;
 use poise::Modal;
-use poise::serenity_prelude::utils::MessageBuilder;
+use poise::serenity_prelude::{Timestamp, utils::MessageBuilder};
+use serenity::all::{CreateScheduledEvent, ScheduledEventType};
 use crate::{Data, Error};
 type ApplicationContext<'a> = poise::ApplicationContext<'a, Data, Error>;
 
@@ -27,26 +28,46 @@ pub async fn announce(ctx: ApplicationContext<'_>) -> Result<(), Error> {
                 .role_by_name("Kino Enjoyers")
                 .map(|role| role.id);
         }
-    }
 
-    if let Some(data) = MyModal::execute(ctx).await? {
-        if let Some(role_id) = role_id {
-            let dt = NaiveDateTime::parse_from_str(&*data.date_time, "%d/%m/%y %H:%M").unwrap();
-            let dt_timezone = Brussels.from_local_datetime(&dt).unwrap();
-            let timestamp = dt_timezone.timestamp();
+        let channel_id = guild_id
+            .channels(&ctx)
+            .await?
+            .into_iter()
+            .find(|(_, channel)| channel.name == "🍿Filmovideo")
+            .map(|(id, _)| id);
 
-            let content = MessageBuilder::new()
-                .role(role_id)
-                .push(", ")
-                .push(data.title)
-                .push(": <t:")
-                .push(timestamp.to_string())
-                .push(":F>")
-                .build();
+        if let Some(data) = MyModal::execute(ctx).await? {
+            if let Some(role_id) = role_id {
+                let dt = NaiveDateTime::parse_from_str(&*data.date_time, "%d/%m/%y %H:%M").unwrap();
+                let dt_timezone = Brussels.from_local_datetime(&dt).unwrap();
+                let timestamp = dt_timezone.timestamp();
 
-            ctx.say(content)
-                .await
-                .map_err(Error::from)?;
+                let content = MessageBuilder::new()
+                    .role(role_id)
+                    .push(", ")
+                    .push(&data.title)
+                    .push(": <t:")
+                    .push(timestamp.to_string())
+                    .push(":F>")
+                    .build();
+
+                ctx.say(content)
+                    .await
+                    .map_err(Error::from)?;
+
+                if let Some(channel_id) = channel_id {
+                    let event = CreateScheduledEvent::new(
+                        ScheduledEventType::Voice,
+                        &data.title,
+                        Timestamp::from_unix_timestamp(timestamp)
+                            .unwrap()
+                    )
+                        .channel_id(channel_id);
+
+                    guild_id.create_scheduled_event(&ctx.http(), event)
+                        .await?;
+                }
+            }
         }
     }
 
